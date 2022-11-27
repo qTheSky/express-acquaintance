@@ -1,20 +1,24 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import {productsRouter} from './routes/products-router'
-import {addressesRouter} from './routes/adresses-router'
+import {runDb} from './repositories/db'
 
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 
 
-const parserMiddleware = bodyParser({})
+const parserMiddleware = bodyParser.json()
 app.use(parserMiddleware)
 
 
 app.use('/products', productsRouter)
-app.use('/addresses', addressesRouter)
 
 
-app.listen(port, () => {
-		console.log(`Example app listening on port ${port}`)
-})
+const startApp = async () => {
+		await runDb()
+		app.listen(port, () => {
+				console.log(`Example app listening on port ${port}`)
+		})
+}
+
+startApp()

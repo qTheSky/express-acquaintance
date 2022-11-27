@@ -23,7 +23,15 @@ exports.productsRepository = {
         });
     },
     findProductById(id) {
-        return products.find(p => p.id === id);
+        return __awaiter(this, void 0, void 0, function* () {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                return product;
+            }
+            else {
+                return null;
+            }
+        });
     },
     createProduct(title) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,12 +53,14 @@ exports.productsRepository = {
         });
     },
     deleteProduct(id) {
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
-                products.splice(i, 1);
-                return true;
+        return __awaiter(this, void 0, void 0, function* () {
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].id === id) {
+                    products.splice(i, 1);
+                    return true;
+                }
             }
-        }
-        return false;
+            return false;
+        });
     },
 };

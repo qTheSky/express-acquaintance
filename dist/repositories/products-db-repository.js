@@ -10,47 +10,45 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsRepository = void 0;
-const products = [{ id: 1, title: 'tomato' }, { id: 2, title: 'orange' }];
+const db_1 = require("./db");
 exports.productsRepository = {
     findProducts(title) {
         return __awaiter(this, void 0, void 0, function* () {
+            const filter = {};
             if (title) {
-                return products.filter(p => p.title.indexOf(title) > -1);
+                filter.title = { $regex: title };
             }
-            else {
-                return products;
-            }
+            return db_1.productsCollection.find(filter).toArray();
         });
     },
     findProductById(id) {
-        return products.find(p => p.id === id);
+        return __awaiter(this, void 0, void 0, function* () {
+            const product = yield db_1.productsCollection.findOne({ id: id });
+            if (product) {
+                return product;
+            }
+            else {
+                return null;
+            }
+        });
     },
     createProduct(title) {
         return __awaiter(this, void 0, void 0, function* () {
             const newProduct = { id: +new Date(), title };
-            products.push(newProduct);
+            const result = yield db_1.productsCollection.insertOne(newProduct);
             return newProduct;
         });
     },
     updateProduct(id, title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                product.title = title;
-                return true;
-            }
-            else {
-                return false;
-            }
+            const result = yield db_1.productsCollection.updateOne({ id: id }, { $set: { title: title } });
+            return result.matchedCount === 1;
         });
     },
     deleteProduct(id) {
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
-                products.splice(i, 1);
-                return true;
-            }
-        }
-        return false;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.productsCollection.deleteOne({ id: id });
+            return result.deletedCount === 1;
+        });
     },
 };
