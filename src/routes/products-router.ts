@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {body} from 'express-validator'
 import {inputValidationMiddleware} from '../midlewares/input-validation-middleware'
-import {productsRepository} from '../repositories/products-db-repository'
+import {productsService} from '../domain/products-service'
 
 
 export const productsRouter = Router({})
@@ -17,7 +17,7 @@ productsRouter.post('/',
 		titleValidation,
 		inputValidationMiddleware,
 		async (req: Request, res: Response) => {
-				const newProduct = await productsRepository.createProduct(req.body.title)
+				const newProduct = await productsService.createProduct(req.body.title)
 				res.status(201).send(newProduct)
 		})
 
@@ -25,9 +25,9 @@ productsRouter.put('/:id',
 		titleValidation,
 		inputValidationMiddleware,
 		async (req: Request, res: Response) => {
-				const isUpdated = await productsRepository.updateProduct(+req.params.id, req.body.title)
+				const isUpdated = await productsService.updateProduct(+req.params.id, req.body.title)
 				if (isUpdated) {
-						const product = await productsRepository.findProductById(+req.params.id)
+						const product = await productsService.findProductById(+req.params.id)
 						res.send(product)
 				} else {
 						res.send(404)
@@ -35,13 +35,13 @@ productsRouter.put('/:id',
 		})
 
 productsRouter.get('/', async (req: Request, res: Response) => {
-		const foundProducts = await productsRepository.findProducts(req.query.title?.toString())
+		const foundProducts = await productsService.findProducts(req.query.title?.toString())
 		res.send(foundProducts)
 })
 
 
 productsRouter.get('/:id', async (req: Request, res: Response) => {
-		const product = await productsRepository.findProductById(+req.params.id)
+		const product = await productsService.findProductById(+req.params.id)
 		if (product) {
 				res.send(product)
 		} else {
@@ -50,7 +50,7 @@ productsRouter.get('/:id', async (req: Request, res: Response) => {
 })
 
 productsRouter.delete('/:id', async (req: Request, res: Response) => {
-		const isDeleted = await productsRepository.deleteProduct(+req.params.id)
+		const isDeleted = await productsService.deleteProduct(+req.params.id)
 		if (isDeleted) {
 				res.send(204)
 		} else {

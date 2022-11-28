@@ -1,7 +1,6 @@
 import {Product, productsCollection} from './db'
 
 
-
 export const productsRepository = {
 		async findProducts(title: string | null | undefined): Promise<Product[]> {
 
@@ -12,15 +11,9 @@ export const productsRepository = {
 				return productsCollection.find(filter).toArray()
 		},
 		async findProductById(id: number): Promise<Product | null> {
-				const product: Product | null = await productsCollection.findOne({id: id})
-				if (product) {
-						return product
-				} else {
-						return null
-				}
+				return await productsCollection.findOne({id: id})
 		},
-		async createProduct(title: string) {
-				const newProduct = {id: +new Date(), title}
+		async createProduct(newProduct: Product) {
 				const result = await productsCollection.insertOne(newProduct)
 				return newProduct
 		},
