@@ -2,6 +2,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import {productsRouter} from './routes/products-router'
 import {runDb} from './repositories/db'
+import {usersRouter} from './routes/users-router'
+import {authRouter} from './routes/auth-router'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -12,6 +14,8 @@ app.use(parserMiddleware)
 
 
 app.use('/products', productsRouter)
+app.use('/users', usersRouter)
+app.use('/auth', authRouter)
 
 
 const startApp = async () => {

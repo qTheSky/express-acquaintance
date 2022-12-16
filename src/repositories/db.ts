@@ -1,4 +1,6 @@
 import {MongoClient} from 'mongodb'
+import {FeedbackDB} from './feedbacks-repository'
+import {UserDB} from './users-repository'
 
 export interface Product {
 		id: number
@@ -11,6 +13,8 @@ const mongoUri =
 const client = new MongoClient(mongoUri)
 const db = client.db('shop')
 export const productsCollection = db.collection<Product>('products')
+export const usersCollection = db.collection<UserDB>('users')
+export const feedbacksCollection = db.collection<FeedbackDB>('feedbacks')
 
 export const runDb = async () => {
 		try {

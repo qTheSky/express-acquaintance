@@ -9,39 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productsRepository = void 0;
-const db_1 = require("./db");
-exports.productsRepository = {
+exports.productsService = void 0;
+const products_db_repository_1 = require("../repositories/products-db-repository");
+exports.productsService = {
     findProducts(title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filter = {};
-            if (title) {
-                filter.title = { $regex: title };
-            }
-            return db_1.productsCollection.find(filter).toArray();
+            return products_db_repository_1.productsRepository.findProducts(title);
         });
     },
     findProductById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.productsCollection.findOne({ id: id });
+            return products_db_repository_1.productsRepository.findProductById(id);
         });
     },
-    createProduct(newProduct) {
+    createProduct(title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.insertOne(newProduct);
-            return newProduct;
+            const newProduct = { id: +new Date(), title };
+            const createdProduct = yield products_db_repository_1.productsRepository.createProduct(newProduct);
+            return createdProduct;
         });
     },
     updateProduct(id, title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.updateOne({ id: id }, { $set: { title: title } });
-            return result.matchedCount === 1;
+            return yield products_db_repository_1.productsRepository.updateProduct(id, title);
         });
     },
     deleteProduct(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.deleteOne({ id: id });
-            return result.deletedCount === 1;
+            return yield products_db_repository_1.productsRepository.deleteProduct(id);
         });
     },
 };

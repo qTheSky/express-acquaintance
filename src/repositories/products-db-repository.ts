@@ -3,7 +3,6 @@ import {Product, productsCollection} from './db'
 
 export const productsRepository = {
 		async findProducts(title: string | null | undefined): Promise<Product[]> {
-
 				const filter: any = {}
 				if (title) {
 						filter.title = {$regex: title}

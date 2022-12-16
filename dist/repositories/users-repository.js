@@ -9,39 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productsRepository = void 0;
+exports.usersRepository = void 0;
 const db_1 = require("./db");
-exports.productsRepository = {
-    findProducts(title) {
+exports.usersRepository = {
+    getAllUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            const filter = {};
-            if (title) {
-                filter.title = { $regex: title };
-            }
-            return db_1.productsCollection.find(filter).toArray();
+            return db_1.usersCollection
+                .find()
+                .sort('createdAt', -1)
+                .toArray();
         });
     },
-    findProductById(id) {
+    createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.productsCollection.findOne({ id: id });
+            const result = yield db_1.usersCollection.insertOne(user);
+            return user;
         });
     },
-    createProduct(newProduct) {
+    findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.insertOne(newProduct);
-            return newProduct;
+            const user = yield db_1.usersCollection.findOne({ _id: id });
+            return user ? user : null;
         });
     },
-    updateProduct(id, title) {
+    findByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.updateOne({ id: id }, { $set: { title: title } });
-            return result.matchedCount === 1;
+            const user = yield db_1.usersCollection.findOne({ $or: [{ email: loginOrEmail }, { userName: loginOrEmail }] });
+            return user;
         });
-    },
-    deleteProduct(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.deleteOne({ id: id });
-            return result.deletedCount === 1;
-        });
-    },
+    }
 };

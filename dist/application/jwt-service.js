@@ -12,23 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const products_router_1 = require("./routes/products-router");
-const db_1 = require("./repositories/db");
-const users_router_1 = require("./routes/users-router");
-const auth_router_1 = require("./routes/auth-router");
-const app = (0, express_1.default)();
-const port = process.env.PORT || 5000;
-const parserMiddleware = body_parser_1.default.json();
-app.use(parserMiddleware);
-app.use('/products', products_router_1.productsRouter);
-app.use('/users', users_router_1.usersRouter);
-app.use('/auth', auth_router_1.authRouter);
-const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app.listen(port, () => {
-        console.log(`Example app listening on port ${port}`);
-    });
-});
-startApp();
+exports.jwtService = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const mongodb_1 = require("mongodb");
+const settings_1 = require("./settings");
+exports.jwtService = {
+    createJWT(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = jsonwebtoken_1.default.sign({ userId: user._id }, settings_1.settings.JWT_SECRET, { expiresIn: '1h' });
+            return token;
+        });
+    },
+    getUserIdByToken(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = jsonwebtoken_1.default.verify(token, settings_1.settings.JWT_SECRET);
+                return new mongodb_1.ObjectId(result.userId);
+            }
+            catch (e) {
+                return null;
+            }
+        });
+    }
+};
