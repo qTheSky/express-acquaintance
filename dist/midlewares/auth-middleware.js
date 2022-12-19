@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const jwt_service_1 = require("../application/jwt-service");
-const users_service_1 = require("../domain/users-service");
+const auth_service_1 = require("../domain/auth-service");
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.headers.authorization) {
         res.send(401);
@@ -20,7 +20,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const token = req.headers.authorization.split(' ')[1]; // "bearer hufausudasufuausduu132u.udasudasjdjAKa"
     const userId = yield jwt_service_1.jwtService.getUserIdByToken(token);
     if (userId) {
-        req.user = (yield users_service_1.usersService.findUserById(userId));
+        req.user = (yield auth_service_1.authService.findUserById(userId));
         next();
         return;
     }

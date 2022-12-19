@@ -8,7 +8,7 @@ export interface Product {
 }
 
 const mongoUri =
-		process.env.mongoURI || 'mongodb://0.0.0.0:27017'
+		process.env.mongoURI || 'mongodb+srv://qTheSky:02121998@cluster0.ia7e6qm.mongodb.net/blogs-tests?retryWrites=true&w=majority'
 
 const client = new MongoClient(mongoUri)
 const db = client.db('shop')

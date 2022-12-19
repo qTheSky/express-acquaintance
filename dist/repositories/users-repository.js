@@ -37,5 +37,17 @@ exports.usersRepository = {
             const user = yield db_1.usersCollection.findOne({ $or: [{ email: loginOrEmail }, { userName: loginOrEmail }] });
             return user;
         });
-    }
+    },
+    findUserByConfirmationCode(emailConfirmationCode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield db_1.usersCollection.findOne({ 'emailConfirmation.email': emailConfirmationCode });
+            return user;
+        });
+    },
+    updateConfirmation(_id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.usersCollection.updateOne({ _id }, { $set: { 'emailConfirmation.isConfirmed': true } });
+            return result.acknowledged;
+        });
+    },
 };

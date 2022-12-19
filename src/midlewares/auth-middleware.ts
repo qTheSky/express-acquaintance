@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
 import {jwtService} from '../application/jwt-service'
-import {usersService} from '../domain/users-service'
+import {authService} from '../domain/auth-service'
 import {UserDB} from '../repositories/users-repository'
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +12,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
 		const userId = await jwtService.getUserIdByToken(token)
 		if (userId) {
-				req.user = await usersService.findUserById(userId) as UserDB
+				req.user = await authService.findUserById(userId) as UserDB
 				next()
 				return
 		}

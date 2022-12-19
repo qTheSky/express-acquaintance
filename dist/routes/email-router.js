@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersRouter = void 0;
+exports.emailRouter = void 0;
 const express_1 = require("express");
-const auth_service_1 = require("../domain/auth-service");
-exports.usersRouter = (0, express_1.Router)({});
-exports.usersRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newProduct = yield auth_service_1.authService.createUser(req.body.login, req.body.email, req.body.password);
-    res.status(201).send(newProduct);
+const business_service_1 = require("../domain/business-service");
+exports.emailRouter = (0, express_1.Router)({});
+exports.emailRouter
+    .post('/send', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield business_service_1.businessService.doOperation();
+    res.send(200);
 }));
